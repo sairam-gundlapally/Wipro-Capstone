@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('/api/auth/login', { email, password });
-            localStorage.setItem('token', response.data.token);
-            navigate('/expenses');
+            const response = await axios.post("http://localhost:5279/api/auth/login", { email, password });
+            localStorage.setItem("token", response.data.token);
+            navigate("/expenses"); // Redirect to expenses on success
         } catch (error) {
-            alert('Invalid credentials');
+            alert("Invalid credentials. Please try again.");
         }
     };
 
@@ -27,4 +27,5 @@ function Login() {
         </div>
     );
 }
+
 export default Login;

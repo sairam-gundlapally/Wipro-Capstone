@@ -159,6 +159,7 @@ C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\backend.AssemblyInfo
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\backend.csproj.CoreCompileInputs.cache
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\backend.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\backend.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\backend.sourcelink.json
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\scopedcss\bundle\backend.styles.css
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\saira\Desktop\FullStackApp\server\obj\Debug\net9.0\staticwebassets.development.json

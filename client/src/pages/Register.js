@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Register() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleRegister = async () => {
         try {
-            await axios.post('/api/auth/register', { name, email, passwordHash: password });
-            alert('User registered successfully');
+            await axios.post("http://localhost:5279/api/auth/register", { name, email, passwordHash: password });
+            alert("Registration successful! Redirecting to login...");
+            navigate("/login"); // Redirect to login after successful registration
         } catch (error) {
-            alert('Error registering user');
+            console.error("Registration Error:", error.response?.data || error.message);
+            alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
         }
     };
 
@@ -26,4 +30,5 @@ function Register() {
         </div>
     );
 }
+
 export default Register;
