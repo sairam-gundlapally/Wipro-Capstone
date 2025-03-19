@@ -17,7 +17,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:3000") // Allow frontend
+        policy => policy.WithOrigins("http://localhost:3000")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -62,7 +62,6 @@ if (string.IsNullOrEmpty(jwtKey))
     throw new InvalidOperationException("JWT Key is missing from appsettings.json.");
 }
 
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -80,7 +79,7 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // 🔹 Apply Middleware
-app.UseCors("AllowReactApp"); // Enable CORS Policy
+app.UseCors("AllowReactApp"); 
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

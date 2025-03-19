@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using FullStackApp.Models;
-using FullStackApp.Data;
-using System.Linq;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FullStackApp.Models;
+using FullStackApp.Data;
 
 namespace FullStackApp.Controllers
 {
@@ -36,14 +34,16 @@ namespace FullStackApp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginRequest loginRequest) // ✅ Use LoginRequest DTO
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
             var user = _context.Users.SingleOrDefault(u => u.Email == loginRequest.Email);
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginRequest.Password, user.PasswordHash))
                 return Unauthorized("Invalid credentials");
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
+            var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is missing in appsettings.json.");
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }),
