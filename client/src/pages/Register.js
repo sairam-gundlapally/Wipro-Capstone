@@ -13,7 +13,7 @@ function Register() {
         try {
             await axios.post("http://localhost:5279/api/auth/register", { name, email, passwordHash: password });
             alert("Registration successful! Redirecting to login...");
-            navigate("/login"); // Redirect to login after successful registration
+            navigate("/login");
         } catch (error) {
             console.error("Registration Error:", error.response?.data || error.message);
             alert(`Error: ${error.response?.data?.message || "Something went wrong!"}`);
@@ -21,12 +21,45 @@ function Register() {
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Register</h2>
-            <input type="text" className="form-control" placeholder="Name" onChange={(e) => setName(e.target.value)} />
-            <input type="email" className="form-control" placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" className="form-control" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-            <button className="btn btn-success mt-2" onClick={handleRegister}>Register</button>
+        <div className="d-flex justify-content-center align-items-center vh-100" 
+             style={{ background: "linear-gradient(135deg, #0f0f0f, #2c3e50)" }}>
+            <div className="p-4 rounded shadow-lg bg-black w-25">
+                <h2 className="text-center mb-3 text-white">Create an Account</h2>
+                <p className="text-center text-secondary">Start managing your finances today.</p>
+
+                <input 
+                    type="text" 
+                    className="form-control mb-3 bg-secondary text-white border-0" 
+                    placeholder="Full Name" 
+                    onChange={(e) => setName(e.target.value)} 
+                />
+                <input 
+                    type="email" 
+                    className="form-control mb-3 bg-secondary text-white border-0" 
+                    placeholder="Email Address" 
+                    onChange={(e) => setEmail(e.target.value)} 
+                />
+                <input 
+                    type="password" 
+                    className="form-control mb-3 bg-secondary text-white border-0" 
+                    placeholder="Password" 
+                    onChange={(e) => setPassword(e.target.value)} 
+                />
+
+                <button 
+                    className="btn btn-success w-100 fw-bold mb-2" 
+                    onClick={handleRegister}
+                >
+                    Sign Up
+                </button>
+
+                <p className="text-center text-secondary">
+                    Already have an account?{" "}
+                    <span className="text-primary fw-bold cursor-pointer" role="button" onClick={() => navigate("/login")}>
+                        Log In
+                    </span>
+                </p>
+            </div>
         </div>
     );
 }

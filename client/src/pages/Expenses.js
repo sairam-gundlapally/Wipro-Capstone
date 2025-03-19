@@ -136,8 +136,8 @@ function Expenses() {
   };
 
   return (
-    <Container className="mt-4">
-      {/* ✅ Navbar with Logout Button */}
+    <Container>
+      
       <Navbar bg="primary" expand="lg" className="mb-4 px-3 rounded" variant="dark">
         <Navbar.Brand>💰 Finance Tracker</Navbar.Brand>
         <Nav className="ms-auto">
