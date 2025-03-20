@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Container, Row, Col, Card, Form, Button, Navbar, Nav } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
 
 function Expenses() {
   const navigate = useNavigate();
@@ -50,183 +51,80 @@ function Expenses() {
   // ✅ Calculate remaining balance correctly
   const remainingBalance = totalIncome - totalExpenses;
 
-  // ✅ Add new expense
-  const handleAddExpense = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You need to log in first.");
-      return;
-    }
-
-    let finalCategory = selectedCategory === "Custom Category" ? customCategory : selectedCategory;
-
-    if (!newExpense.amount || isNaN(newExpense.amount) || parseFloat(newExpense.amount) <= 0) {
-      alert("Please enter a valid amount.");
-      return;
-    }
-
-    if (!finalCategory) {
-      alert("Please select or enter a category.");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:5279/api/expenses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          amount: parseFloat(newExpense.amount),
-          category: finalCategory,
-          date: newExpense.date,
-          description: newExpense.description,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to add expense");
-
-      const savedExpense = await response.json();
-      setExpenses([...expenses, savedExpense]); // ✅ Update state with saved expense
-
-      setNewExpense({
-        amount: "",
-        category: "",
-        date: new Date().toISOString().split("T")[0],
-        description: "",
-      });
-
-      setSelectedCategory("");
-      setCustomCategory("");
-    } catch (error) {
-      console.error("Error adding expense:", error);
-      alert("Error saving expense. Try again.");
-    }
-  };
-
-  // ✅ Delete expense function
-  const handleDeleteExpense = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("You need to log in first.");
-        return;
-      }
-
-      const response = await fetch(`http://localhost:5279/api/expenses/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) throw new Error("Failed to delete expense");
-
-      setExpenses(expenses.filter((expense) => expense.id !== id)); // ✅ Remove from state
-    } catch (error) {
-      console.error("Error deleting expense:", error);
-      alert("Error deleting expense. Try again.");
-    }
-  };
-
-  // ✅ Handle Logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
-
   return (
-    <Container>
+   
+    <Container className="py-4 shadow-lg bg-black">
+       
       
-      <Navbar bg="primary" expand="lg" className="mb-4 px-3 rounded" variant="dark">
-        <Navbar.Brand>💰 Finance Tracker</Navbar.Brand>
-        <Nav className="ms-auto">
-          <Button variant="light" onClick={handleLogout}>🚪 Logout</Button>
-        </Nav>
-      </Navbar>
+      {/* ✅ Updated Navbar with better spacing */}
+      <Navbar bg="black" expand="lg" className="mb-4 px-3 rounded shadow-sm" variant="dark">
+  <Navbar.Brand className="fw-bold">Personal Finance Tracker</Navbar.Brand>
+  <Nav className="ms-auto">
+    <Button
+      variant="outline-light"
+      onClick={() => {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }}
+    >
+      <FiLogOut className="me-2" /> Logout
+    </Button>
+  </Nav>
+</Navbar>
 
       {/* ✅ User Input for Income */}
-      <Card className="mb-4 shadow-sm rounded border-0">
+      <Card className="mb-4 shadow-sm border-0 rounded">
         <Card.Body>
-          <h4 className="text-primary">Enter Your Total Income</h4>
+          <h4 className="text-dark">Enter Your Total Income</h4>
           <div className="d-flex">
             <Form.Control
               type="number"
               placeholder="Enter Income"
               value={income}
               onChange={(e) => setIncome(e.target.value)}
-              className="me-1"
+              className="me-2 rounded-pill"
             />
-            <Button variant="success" onClick={() => setTotalIncome(parseFloat(income) || 0)}>✔ Set Income</Button>
+            <Button variant="primary" className="rounded-pill" onClick={() => setTotalIncome(parseFloat(income) || 0)}> Set Income</Button>
           </div>
-          <h5 className="mt-3 text-success">Total Income: ₹{totalIncome}</h5>
-          <h5 className="text-danger">Total Expenses: ₹{totalExpenses}</h5>
-          <h5 className="text-warning">Remaining Balance: ₹{remainingBalance}</h5>
+          <h5 className="mt-3 text-black fw-bold">Total Income: ₹{totalIncome}</h5>
+          <h5 className="text-black fw-bold">Total Expenses: ₹{totalExpenses}</h5>
+          <h5 className="text-black fw-bold">Remaining Balance: ₹{remainingBalance}</h5>
         </Card.Body>
       </Card>
 
       <Row>
         <Col md={4}>
-          <Card className="shadow-sm rounded border-0">
+          <Card className="shadow-sm border-0 rounded">
             <Card.Body>
               <Card.Title className="text-primary">➕ Add New Expense</Card.Title>
-              <Form onSubmit={handleAddExpense}>
+              <Form>
                 <Form.Group className="mb-3">
                   <Form.Label>Amount (₹)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="amount"
-                    value={newExpense.amount}
-                    onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-                    required
-                  />
+                  <Form.Control type="number" className="rounded" required />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>Category</Form.Label>
-                  <Form.Control as="select" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-                    <option value="">Select Category</option>
-                    <option value="Custom Category">Custom Category</option>
-                    {["Food & Dining", "Transportation", "Shopping"].map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </Form.Control>
+                  <Form.Select className="rounded">
+                    <option>Select Category</option>
+                    <option>Food & Dining</option>
+                    <option>Transportation</option>
+                    <option>Shopping</option>
+                    <option>Custom Category</option>
+                  </Form.Select>
                 </Form.Group>
-
-                {selectedCategory === "Custom Category" && (
-                  <Form.Group className="mb-3">
-                    <Form.Label>Enter Custom Category</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={customCategory}
-                      onChange={(e) => setCustomCategory(e.target.value)}
-                      placeholder="Type your category"
-                    />
-                  </Form.Group>
-                )}
 
                 <Form.Group className="mb-3">
                   <Form.Label>Date</Form.Label>
-                  <Form.Control
-                    type="date"
-                    name="date"
-                    value={newExpense.date}
-                    onChange={(e) => setNewExpense({ ...newExpense, date: e.target.value })}
-                  />
+                  <Form.Control type="date" className="rounded" />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                   <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="description"
-                    value={newExpense.description}
-                    onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
-                    placeholder="Optional description"
-                  />
+                  <Form.Control type="text" placeholder="Optional description" className="rounded" />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" className="w-100">➕ Add Expense</Button>
+                <Button variant="primary" className="w-100 rounded-pill"> Add Expense</Button>
               </Form>
             </Card.Body>
           </Card>
@@ -234,24 +132,30 @@ function Expenses() {
 
         {/* ✅ Expense List with Delete Option */}
         <Col md={8}>
-          <Card className="shadow-sm rounded border-0">
+          <Card className="shadow-sm border-0 rounded ">
             <Card.Body>
               <Card.Title className="text-primary">📜 Expense List</Card.Title>
               {expenses.map((expense) => (
-                <div key={expense.id} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                <div key={expense.id} className="d-flex justify-content-between align-items-center border-bottom py-2 ">
                   <div>
                     <strong>{expense.category}</strong><br/>
-                    Date: {new Date(expense.date).toLocaleDateString("en-GB")}<br/>
-                    <small>{expense.description}</small>
+                    <span className="text-muted">{new Date(expense.date).toLocaleDateString("en-GB")}</span><br/>
+                    <small className="text-secondary">{expense.description}</small>
                   </div>
-                  <div>₹{expense.amount} <Button variant="danger" size="sm" onClick={() => handleDeleteExpense(expense.id)}>🗑 Delete</Button></div>
+                  <div className="text-end">
+                    <span className="fw-bold text-dark">₹{expense.amount}</span>
+                    <Button variant="outline-danger" size="sm" className="ms-2 rounded-pill">Delete</Button>
+                  </div>
                 </div>
               ))}
             </Card.Body>
           </Card>
         </Col>
       </Row>
-    </Container>
+     
+      </Container>
+      
+    
   );
 }
 

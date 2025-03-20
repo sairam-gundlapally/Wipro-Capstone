@@ -11,7 +11,7 @@ function Home() {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow">
         <div className="container">
           <a className="navbar-brand d-flex align-items-center" href="/">
-            <span className="fw-bold">WealthFlow</span>
+            <span className="fw-bold">Personal Finance Tracker </span>
           </a>
           <div className="ms-auto">
             <button className="btn btn-outline-light me-2" onClick={() => navigate("/login")}>
@@ -75,7 +75,7 @@ function Home() {
 
       {/* ✅ Footer */}
       <footer className="py-3 bg-black text-center">
-        <p className="mb-0 text-secondary">© 2024 WealthFlow. Built for Financial Freedom.</p>
+        <p className="mb-0 text-secondary">© 2024 Personal Finance Tracker. Built for Financial Freedom.</p>
       </footer>
     </div>
   );
